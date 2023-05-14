@@ -15,3 +15,8 @@ export const loadInitialData = createAsyncThunk(
             dispatch(setIsFirstEntrance(false))
         }
     })
+
+
+export const setIsFirstEntranceThunk = async () => {
+    await AsyncStorage.setItem(UserKeys.IS_FIRST_ENTRANCE, "true");
+}

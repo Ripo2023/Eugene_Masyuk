@@ -16,17 +16,20 @@ interface IButtonSubmitProps {
 	borderRadius?: number;
 	borderColor?: string;
 	leftIcon?: JSX.Element;
+	fontStyle?: FontStyles;
+	disabled?: boolean;
+	disabledBackground?: string;
 }
 
 export const Button: React.FC<IButtonSubmitProps> = (props) => {
-	const { text, leftIcon, textColor, textSize } = props;
+	const { text,fontStyle,leftIcon, textColor, textSize } = props;
 
 	return (
 		<ButtonContainer {...props}>
 			{leftIcon && <LeftIconWrapper>{leftIcon}</LeftIconWrapper>}
 			<Text
 				size={textSize}
-				fontStyle={FontStyles.MEDIUM}
+				fontStyle={ fontStyle ?? FontStyles.MEDIUM}
 				color={textColor ?? WHITE_COLOR}
 			>
 				{text}
@@ -38,7 +41,13 @@ export const Button: React.FC<IButtonSubmitProps> = (props) => {
 const ButtonContainer = styled.TouchableOpacity<IButtonSubmitProps>`
 	width: ${({ width }) => (width ? `${width}px` : "100%")};
 	height: ${({ height }) => height ?? 50}px;
-	background-color: ${({ backgroundColor }) => backgroundColor ?? ORANGE_COLOR};
+	background-color: ${({ backgroundColor, disabled, disabledBackground }) => {
+		if (disabled && disabledBackground) {
+			return disabledBackground
+		}
+
+			return backgroundColor ?? ORANGE_COLOR;
+	}};
 	border: 1px solid ${({ borderColor }) => borderColor ?? "transparent"};
 	flex-direction: row;
 	justify-content: center;
