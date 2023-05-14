@@ -14,6 +14,7 @@ import { Dot } from "./Dot";
 import { Button } from "../../shared/ui/Button";
 import { RootStackListType } from "../../screens";
 import { RootScreens } from "../../screens/config";
+import {  setIsFirstEntranceThunk } from "../../entities/user";
 
 
 const MAX_STEP = 3;
@@ -26,11 +27,14 @@ export const DashboardCarousel: React.FC<IDashboardCarouselProps> = ({navigation
     const [activeStep, setActiveStep] = useState(0)
 
     const handlePressIndicator = (index: number) => {
-        setActiveStep(index)
+        if (index > activeStep) {
+            setActiveStep(index)
+        }
     }
 
-    const handlePressSubmit = () => {
+    const handlePressSubmit = async () => {
         if (activeStep === MAX_STEP) {
+                setIsFirstEntranceThunk()
                 navigation.replace(RootScreens.AUTHENTICATION)
 
                 return;

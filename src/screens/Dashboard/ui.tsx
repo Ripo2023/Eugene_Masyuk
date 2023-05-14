@@ -8,6 +8,7 @@ import { Text } from "../../shared/ui";
 import { DashboardCarousel } from "../../widgets/dashboard-carousel/ui";
 import { RootStackListType } from "..";
 import { RootScreens } from "../config";
+import { setIsFirstEntranceThunk } from "../../entities/user";
 
 interface IProps {
     navigation: NativeStackNavigationProp<RootStackListType, RootScreens.DASHBOARD>
@@ -15,7 +16,8 @@ interface IProps {
 
 export const DashboardScreen: React.FC<IProps> = ({navigation}) => {
 
-    const handlePressSkip = () => {
+    const handlePressSkip = async () => {
+        setIsFirstEntranceThunk()
         navigation.replace(RootScreens.AUTHENTICATION)
     }
 
