@@ -20,9 +20,15 @@ interface IProps {
 	title: string;
 	isActive: boolean;
 	onPress: () => void;
+	inActiveBackground?: string;
 }
 
-export const BadgeButton: React.FC<IProps> = ({ title, onPress, isActive }) => {
+export const BadgeButton: React.FC<IProps> = ({
+	title,
+	inActiveBackground = WHITE_COLOR,
+	onPress,
+	isActive,
+}) => {
 	const isActiveShared = useSharedValue(0);
 	const isActiveSharedColor = useSharedValue(0);
 
@@ -30,7 +36,7 @@ export const BadgeButton: React.FC<IProps> = ({ title, onPress, isActive }) => {
 		const backgroundColor = interpolateColor(
 			isActiveShared.value,
 			[0, 1],
-			[WHITE_COLOR, "#2A2A2B"],
+			[inActiveBackground, "#2A2A2B"],
 			"RGB",
 		);
 

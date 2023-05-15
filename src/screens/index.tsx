@@ -1,6 +1,7 @@
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import React, { useEffect } from "react";
 import SplashScreen from "react-native-splash-screen";
+import PushNotification from "react-native-push-notification";
 
 import { useAppDispatch, useAppSelector } from "../shared/lib";
 import { RootScreens } from "./config";
@@ -8,21 +9,25 @@ import { DashboardScreen } from "./Dashboard";
 import { loadInitialData } from "../entities/user/model/thunks";
 import { AuthenticationScreen } from "./Authentication";
 import { HomeScreen } from "./Home";
+import { OrdersScreen } from "./Orders/ui";
 
 export type RootStackListType = {
 	Authentication: undefined;
 	Dashboard: undefined;
 	Home: undefined;
+	Orders: undefined;
 };
 
 const Stack = createNativeStackNavigator<RootStackListType>();
 
 export const Routing = () => {
-	const { isLoggedIn, isFirstEntrance } = useAppSelector((store) => store.user);
+	const { isFirstEntrance, phoneNumber } = useAppSelector(
+		(store) => store.user,
+	);
 	const dispatch = useAppDispatch();
 
 	const handleGetFirstScreen = () => {
-		if (isLoggedIn) {
+		if (phoneNumber) {
 			return RootScreens.HOME;
 		}
 
@@ -40,6 +45,20 @@ export const Routing = () => {
 
 	useEffect(() => {
 		initializeFields();
+	}, []);
+
+	useEffect(() => {
+		PushNotification.createChannel(
+			{
+				channelId: "worldskills-id",
+				channelName: "worldskills",
+				channelDescription: "worldskills",
+				playSound: true,
+				soundName: "default",
+				vibrate: true,
+			},
+			() => {},
+		);
 	}, []);
 
 	if (isFirstEntrance === null) {
@@ -64,6 +83,11 @@ export const Routing = () => {
 			<Stack.Screen
 				name={RootScreens.HOME}
 				component={HomeScreen}
+			/>
+
+			<Stack.Screen
+				name={RootScreens.ORDERS}
+				component={OrdersScreen}
 			/>
 		</Stack.Navigator>
 	);
