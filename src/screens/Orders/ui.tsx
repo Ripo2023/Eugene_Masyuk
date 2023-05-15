@@ -5,6 +5,7 @@ import FastImage from "react-native-fast-image";
 
 import {
 	BLACK_COLOR,
+	GRAY_COLOR,
 	ORANGE_COLOR,
 	Spacer,
 	WHITE_COLOR,
@@ -51,6 +52,23 @@ export const OrdersScreen: React.FC = () => {
 
 	const { isLoading } = useLoadData({ loadData: handleLoadData });
 
+	const emptyListComponent = () => {
+		if (!isLoading) {
+			return (
+				<EmptyWrapper>
+					<Text
+						size={Spacer.LARGE}
+						color={GRAY_COLOR}
+					>
+						Nothing to show you. Create your first order
+					</Text>
+				</EmptyWrapper>
+			);
+		}
+
+		return <></>;
+	};
+
 	return (
 		<Wrapper>
 			<StatusBar
@@ -64,6 +82,7 @@ export const OrdersScreen: React.FC = () => {
 				data={orders}
 				ListHeaderComponent={headerComponent}
 				renderItem={renderItem}
+				ListEmptyComponent={emptyListComponent}
 				contentContainerStyle={{ marginHorizontal: Spacer.MEDIUM }}
 			/>
 			{activeOrderRef.current && (
@@ -108,3 +127,5 @@ const Title = styled(Text)`
 	margin-bottom: ${Spacer.MEDIUM}px;
 	margin-top: ${Spacer.EXTRA_LARGE}px;
 `;
+
+const EmptyWrapper = styled.View``;

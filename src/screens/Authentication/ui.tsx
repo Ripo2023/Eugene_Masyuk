@@ -41,8 +41,9 @@ interface IProps {
 	>;
 }
 
+const MAX_LENGTH_CODE = 6;
+
 export const AuthenticationScreen: React.FC<IProps> = ({ navigation }) => {
-	// ref
 	const bottomSheetRef = useRef<BottomSheet>(null);
 	const [phoneNumberValue, setPhoneNumberValue] = useState("");
 	const [isActiveCheckBox, setIsActiveCheckBox] = useState(false);
@@ -138,13 +139,17 @@ export const AuthenticationScreen: React.FC<IProps> = ({ navigation }) => {
 					<Input
 						defaultValue={codeValue}
 						onChange={setCodeValue}
+						keyboardType="number-pad"
+						maxLength={MAX_LENGTH_CODE}
 					/>
 					<ButtonWrapper>
 						<Button
 							fontStyle={FontStyles.BOLD}
 							textSize={Spacer.LARGE}
 							text="Sign in"
-							disabled={!codeValue.length}
+							disabled={
+								!codeValue.length || codeValue.length !== MAX_LENGTH_CODE
+							}
 							disabledBackground={DARK_GRAY_COLOR}
 							onPress={handlePressSubmit}
 						/>
