@@ -44,6 +44,8 @@ interface IAddProductModalProps {
 	data: IProduct;
 }
 
+// модальное окно с функционалом добавлением заказа
+
 export const AddProductModal: React.FC<IAddProductModalProps> = ({
 	visible,
 	data,

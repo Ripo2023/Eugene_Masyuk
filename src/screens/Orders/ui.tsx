@@ -1,6 +1,7 @@
-import React from "react";
+import React, { useRef, useState } from "react";
 import { StatusBar, FlatList, ListRenderItemInfo } from "react-native";
 import styled from "styled-components/native";
+import FastImage from "react-native-fast-image";
 
 import {
 	BLACK_COLOR,
@@ -11,10 +12,17 @@ import {
 import { IOrder, getOrders } from "../../entities/user";
 import { useAppSelector, useLoadData } from "../../shared/lib";
 import { Loader, Text } from "../../shared/ui";
+import { OrderModal } from "../../widgets/order-modal";
 
 export const OrdersScreen: React.FC = () => {
 	const { userId } = useAppSelector((store) => store.user);
 	const [orders, setOrders] = React.useState<Nullable<IOrder[]>>(null);
+	const activeOrderRef = useRef<Nullable<IOrder>>(null);
+	const [isOpenModal, setIsOpenModal] = useState(false);
+
+	const handleToggleModal = () => {
+		setIsOpenModal(!isOpenModal);
+	};
 	const handleLoadData = async () => {
 		if (userId) {
 			const result = await getOrders(userId);
@@ -23,9 +31,14 @@ export const OrdersScreen: React.FC = () => {
 		}
 	};
 
+	const handlePressOrder = (data: IOrder) => {
+		activeOrderRef.current = data;
+		handleToggleModal();
+	};
+
 	const renderItem = ({ item }: ListRenderItemInfo<IOrder>) => {
 		return (
-			<OrderWrapper>
+			<OrderWrapper onPress={() => handlePressOrder(item)}>
 				<OrderImage source={{ uri: item.image }} />
 				<Text color={WHITE_COLOR}>{item.id}</Text>
 			</OrderWrapper>
@@ -53,6 +66,13 @@ export const OrdersScreen: React.FC = () => {
 				renderItem={renderItem}
 				contentContainerStyle={{ marginHorizontal: Spacer.MEDIUM }}
 			/>
+			{activeOrderRef.current && (
+				<OrderModal
+					visible={isOpenModal}
+					onClose={handleToggleModal}
+					data={activeOrderRef.current}
+				/>
+			)}
 		</Wrapper>
 	);
 };
@@ -62,7 +82,7 @@ const Wrapper = styled.View`
 	background: ${WHITE_COLOR};
 `;
 
-const OrderWrapper = styled.View`
+const OrderWrapper = styled.TouchableOpacity`
 	width: 100%;
 	height: 40px;
 	flex-direction: row;
@@ -74,7 +94,7 @@ const OrderWrapper = styled.View`
 	border-radius: 10px;
 `;
 
-const OrderImage = styled.Image`
+const OrderImage = styled(FastImage)`
 	width: 20px;
 	height: 20px;
 	background: ${WHITE_COLOR};
