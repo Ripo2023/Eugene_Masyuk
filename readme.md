@@ -1,3 +1,6 @@
-Made by Eugene Masyuk with love
+# **Made by Eugene Masyuk**
 
-AIzaSyCUS4lmwdYGCelhdYjZSPBTTdf8DRQjLno
+# **Architecture** 🚀
+
+This application uses **feature-sliced** architecture.
+Docs: https://feature-sliced.design/
