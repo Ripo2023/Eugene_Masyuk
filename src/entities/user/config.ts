@@ -1,7 +1,10 @@
 export enum UserKeys {
     IS_FIRST_ENTRANCE = "IS_FIRST_ENTRANCE",
     PHONE_NUMBER = "PHONE_NUMBER",
-    USER_ID = "USER_ID"
+    USER_ID = "USER_ID",
+    PRODUCTS_DATA = "PRODUCTS_DATA",
+    BANNERS_DATA = "BANNERS_DATA",
+    ORDERS_DATA = "ORDERS_DATA",
 }
 
 export interface IUser {

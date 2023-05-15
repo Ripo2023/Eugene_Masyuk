@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { StatusBar } from "react-native";
+import { StatusBar, RefreshControl } from "react-native";
 import styled from "styled-components/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 
@@ -13,11 +13,16 @@ import {
 	getDiscounts,
 	getProducts,
 } from "../../entities/product";
-import { useLoadData } from "../../shared/lib";
+import { useAppDispatch, useAppSelector, useLoadData } from "../../shared/lib";
 import { IBanner, IProduct } from "../../entities/product/config";
 import { categoriesList } from "./config";
 import { RootStackListType } from "..";
 import { RootScreens } from "../config";
+import {
+	cacheBannersData,
+	cacheProductsData,
+	getNetworkStatus,
+} from "../../entities/user";
 
 interface IProps {
 	navigation: NativeStackNavigationProp<RootStackListType, RootScreens.HOME>;
@@ -25,14 +30,36 @@ interface IProps {
 
 export const HomeScreen: React.FC<IProps> = ({ navigation }) => {
 	const [activeCategory, setActiveCategory] = useState(0);
+	const { cachedProductsData, cachedBannersData } = useAppSelector(
+		(store) => store.user,
+	);
+	const dispatch = useAppDispatch();
 	const [productsData, setProductsData] = useState<Nullable<IProduct[]>>(null);
 	const [bannersData, setBannersData] = useState<Nullable<IBanner[]>>(null);
+	const [isRefreshing, setIsRefreshing] = useState(false);
+
 	const handleLoadData = async () => {
+		const isUserOnline = await getNetworkStatus();
+
+		if (!isUserOnline) {
+			setProductsData(cachedProductsData);
+			setBannersData(cachedBannersData);
+
+			return;
+		}
 		const productsResult = await getProducts();
 		const discountsResult = await getDiscounts();
 
+		cacheProductsData(productsResult, dispatch);
+		cacheBannersData(discountsResult, dispatch);
 		setProductsData(productsResult);
 		setBannersData(discountsResult);
+	};
+
+	const handleRefreshData = async () => {
+		setIsRefreshing(true);
+		await handleLoadData();
+		setIsRefreshing(false);
 	};
 
 	useEffect(() => {
@@ -61,7 +88,15 @@ export const HomeScreen: React.FC<IProps> = ({ navigation }) => {
 				</LogoInfo>
 			</LogoWrapper>
 
-			<Container showsVerticalScrollIndicator={false}>
+			<Container
+				refreshControl={
+					<RefreshControl
+						refreshing={isRefreshing}
+						onRefresh={handleRefreshData}
+					/>
+				}
+				showsVerticalScrollIndicator={false}
+			>
 				{productsData && bannersData && (
 					<>
 						<BannersList data={bannersData} />

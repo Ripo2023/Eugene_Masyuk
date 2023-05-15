@@ -10,14 +10,21 @@ import {
 	Spacer,
 	WHITE_COLOR,
 } from "../../shared/config";
-import { IOrder, getOrders } from "../../entities/user";
-import { useAppSelector, useLoadData } from "../../shared/lib";
+import {
+	IOrder,
+	cacheProductsData,
+	getNetworkStatus,
+	getOrders,
+} from "../../entities/user";
+import { useAppDispatch, useAppSelector, useLoadData } from "../../shared/lib";
 import { Loader, Text } from "../../shared/ui";
 import { OrderModal } from "../../widgets/order-modal";
 
 export const OrdersScreen: React.FC = () => {
 	const { userId } = useAppSelector((store) => store.user);
+	const { cachedOrdersData } = useAppSelector((store) => store.user);
 	const [orders, setOrders] = React.useState<Nullable<IOrder[]>>(null);
+	const dispatch = useAppDispatch();
 	const activeOrderRef = useRef<Nullable<IOrder>>(null);
 	const [isOpenModal, setIsOpenModal] = useState(false);
 
@@ -25,10 +32,19 @@ export const OrdersScreen: React.FC = () => {
 		setIsOpenModal(!isOpenModal);
 	};
 	const handleLoadData = async () => {
+		const isUserOnline = await getNetworkStatus();
+
+		if (!isUserOnline) {
+			setOrders(cachedOrdersData);
+
+			return;
+		}
+
 		if (userId) {
 			const result = await getOrders(userId);
 
 			setOrders(result);
+			cacheProductsData(result, dispatch);
 		}
 	};
 
