@@ -4,13 +4,14 @@ import { FlatList, ListRenderItemInfo } from "react-native";
 import { BANNER_WIDTH, BannerData } from "./config";
 import { BannerItem } from "./BannerItem";
 import { Spacer } from "../../shared/config";
+import { IBanner } from "../../entities/product/config";
 
 interface IBannersListProps {
-	data: BannerData[];
+	data: IBanner[];
 }
 
 export const BannersList: React.FC<IBannersListProps> = ({ data }) => {
-	const renderItem = ({ item }: ListRenderItemInfo<BannerData>) => {
+	const renderItem = ({ item }: ListRenderItemInfo<IBanner>) => {
 		return <BannerItem data={item} />;
 	};
 

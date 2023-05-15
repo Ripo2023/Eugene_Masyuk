@@ -1,5 +1,6 @@
 export enum RootScreens {
 	AUTHENTICATION = "Authentication",
 	DASHBOARD = "Dashboard",
-	HOME = "Home"
+	HOME = "Home",
+	ORDERS = "Orders",
 }

@@ -1,8 +1,18 @@
 export interface IProduct {
-    title: string;
+    name: string;
     description: string;
     image: string;
-    minPrice: number;
-    volumes?: number[];
+    price: number;
+    components: IProductComponent[]
+    volume: string[];
+    id: number;
+}
+export interface IProductComponent {
+    value: string;
+     image: string
 }
 
+export interface IBanner {
+    image: string;
+    id: number;
+}

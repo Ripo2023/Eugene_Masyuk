@@ -1,5 +1,6 @@
 import React from "react";
 import styled from "styled-components/native";
+import { KeyboardTypeOptions } from "react-native";
 
 import { DARK_GRAY_COLOR, Spacer } from "../../config";
 
@@ -8,10 +9,19 @@ interface InputProps {
 	onChange: (text: string) => void;
 	onBlur?: () => void;
 	defaultValue?: string;
+	keyboardType?: KeyboardTypeOptions;
+	maxLength?: number;
 }
 
 export const Input: React.FC<InputProps> = (props) => {
-	const { placeholder, onBlur, onChange, defaultValue } = props;
+	const {
+		placeholder,
+		maxLength,
+		keyboardType,
+		onBlur,
+		onChange,
+		defaultValue,
+	} = props;
 
 	return (
 		<Wrapper
@@ -20,6 +30,8 @@ export const Input: React.FC<InputProps> = (props) => {
 			onChangeText={onChange}
 			defaultValue={defaultValue}
 			autoCapitalize="none"
+			maxLength={maxLength}
+			keyboardType={keyboardType}
 		/>
 	);
 };

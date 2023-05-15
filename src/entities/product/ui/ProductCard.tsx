@@ -27,12 +27,12 @@ export const ProductCard: React.FC<IProductCardProps> = ({
 				shadowColor: "#000",
 				shadowOffset: {
 					width: 0,
-					height: 2,
+					height: 4,
 				},
 				shadowOpacity: 0.25,
 				shadowRadius: 3.84,
 
-				elevation: 3,
+				elevation: 2,
 			}}
 			width={width}
 		>
@@ -40,8 +40,8 @@ export const ProductCard: React.FC<IProductCardProps> = ({
 				resizeMode="contain"
 				source={{ uri: data.image }}
 			/>
-			<Title>{data.title}</Title>
-			<SubTitle>from {data.minPrice} $</SubTitle>
+			<Title>{data.name}</Title>
+			<SubTitle>from {data.price} ₽</SubTitle>
 			<Button
 				text="Select"
 				onPress={handlePressButton}
